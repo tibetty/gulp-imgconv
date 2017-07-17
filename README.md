@@ -28,8 +28,7 @@ gulp.task('conversion', () => {
 - `format`
     Format to convert, right now supports jpeg, png and webp; when it's ommitted, the format will be inferred from orginal file extension.  
 
-- `width`
-- `height`
+- `width`, `height`
     The width & height that the image will be resized to; when only one field is specified, the other one will use the image's.  
     - `resizeOpts`
       crop/embed/min/max/ignoreAspectRatio/withoutEnlargement: mutual exclusive; crop is followed by options (for more details, please visit http://sharp.dimens.io), others are true/false
