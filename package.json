@@ -1,0 +1,37 @@
+{
+  "name": "gulp-imgconv",
+  "version": "1.0.0",
+  "description": "a gulp plugin to convert images (usually format conversion, resizing, overlaying, etc.) for distribution",
+  "main": "gulp-imgconv.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tibetty/gulp-imgconv.git"
+  },
+  "keywords": [
+    "gulp",
+    "plugin",
+    "gulpplugin",
+    "image",
+    "conversion",
+    "jpeg",
+    "png",
+    "webp",
+    "resize",
+    "overlay"
+  ],
+  "author": "tibetty",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tibetty/gulp-imgconv/issues"
+  },
+  "homepage": "https://github.com/tibetty/gulp-imgconv#readme",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-util": "^3.0.8",
+    "sharp": "^0.18.2",
+    "through2": "^2.0.3"
+  }
+}
