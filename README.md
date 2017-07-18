@@ -11,11 +11,12 @@ npm i gulp-imgconv --save-dev
 
 ## Usage
 ```javascript
-const convImg = require('gulp-imgconv');
+const gulp = require('gulp'), 
+  convert = require('gulp-imgconv');
 
-gulp.task('conversion', () => {
+gulp.task('convert', () => {
   gulp.src('dev/images/*.jpg')
-    .pipe(convImg({
+    .pipe(convert({
       format: 'png',
       width: 100,
       height: 100,
@@ -31,12 +32,12 @@ gulp.task('conversion', () => {
 - `width`, `height`
     The width & height that the image will be resized to; when only one field is specified, the other one will use the image's.  
     - `resizeOpts`
-      crop/embed/min/max/ignoreAspectRatio/withoutEnlargement: mutual exclusive; crop is followed by options (for more details, please visit http://sharp.dimens.io), others are true/false
+      crop/embed/min/max/ignoreAspectRatio/withoutEnlargement: mutual exclusive; crop is followed by options (for more details, please visit http://sharp.dimens.io), others are true/false.
 
 - `overlay`
     String or Buffer, the svg file or the svg content to overlay upon image.
     - `overlayOpts`
-      You can find the structure definition from http://sharp.dimens.io/
+      You can find the structure definition from http://sharp.dimens.io/.
 
 Credits
 ---------------
