@@ -22,13 +22,13 @@ const PLUGIN_NAME = 'gulp-imgconv';
 module.exports = (opts) => {
 	opts = opts || {};
 	
+	let self = this;
 	let format = opts.format || file.path.match(/[^\.]+$/)[0];
 	let ext = format = format.toLowerCase();
 	if (format === 'jpg') format = 'jpeg';
 	else if (format === 'gif' || format === 'svg') ext = format = 'png';
 
 	return through.obj((file, enc, cb) => {
-		let self = this;
 		function convertImage(buf, done) {
 			if (['jpeg', 'png', 'webp'].indexOf(format) >= 0) {
 				let image = sharp(buf);
