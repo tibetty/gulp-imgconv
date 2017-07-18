@@ -11,6 +11,7 @@ const PLUGIN_NAME = 'gulp-imgconv';
 
 // inbound parameter opts have below fields:
 // + format: the output format, right now supports jpeg, png & webp
+// + formatOpts: conversion options for output format
 // + width/height: size for resizing operation, if only one field was specified, the other field will use the original one
 // + resizeOpts:
 // +--+ crop/embed/min/max/ignoreAspectRatio/withoutEnlargement: mutual exclusive; crop is followed by options, others are true/false
@@ -35,6 +36,7 @@ module.exports = (opts) => {
 				let image = sharp(buf);
 				image.metadata().then(meta => {
 					let pipeline = [['toFormat', [format]], ['toBuffer']];
+					if (opts.formatOpts) pipeline.unshift([format, [opts.formatOpts]]);
 					if (opts.overlay) pipeline.unshift(['overlayWith', [opts.overlay, opts.overlayOpts || {cutout: true}]]);
 					if (opts.resizeOpts) {
 						let resizeOpts = opts.resizeOpts;
