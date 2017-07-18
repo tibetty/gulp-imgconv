@@ -22,13 +22,13 @@ const PLUGIN_NAME = 'gulp-imgconv';
 module.exports = (opts) => {
 	opts = opts || {};
 	
-	let self = this;
 	let format = opts.format || file.path.match(/[^\.]+$/)[0];
 	let ext = format = format.toLowerCase();
 	if (format === 'jpg') format = 'jpeg';
 	else if (format === 'gif' || format === 'svg') ext = format = 'png';
 
-	return through.obj((file, enc, cb) => {
+	return through.obj(function(file, enc, cb) {
+		let self = this;
 		function convertImage(buf, done) {
 			if (['jpeg', 'png', 'webp'].indexOf(format) >= 0) {
 				let image = sharp(buf);
@@ -49,9 +49,11 @@ module.exports = (opts) => {
 					pipelines.reduce((obj, stage) => obj[stage[0]].apply(obj, stage[1]), image).then(buffer => {
 						done(null, buffer);
 					}).catch(err => {
+						console.log(err);
 						done(new gutil.PluginError(PLUGIN_NAME, err));
 					})
 				}).catch(err => {
+					console.log(err);
 					done(new gutil.PluginError(PLUGIN_NAME, err));
 				});
 			} else {
