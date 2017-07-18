@@ -29,24 +29,28 @@ module.exports = (opts) => {
 
 	return through.obj(function(file, enc, cb) {
 		let self = this;
+		
 		function convertImage(buf, done) {
 			if (['jpeg', 'png', 'webp'].indexOf(format) >= 0) {
 				let image = sharp(buf);
 				image.metadata().then(meta => {
-					let pipelines = [['toFormat', [format]], ['toBuffer']];
-					if (opts.overlay) pipelines.unshift(['overlayWith', [opts.overlay, opts.overlayOpts || {cutout: true}]]);
+					let pipeline = [['toFormat', [format]], ['toBuffer']];
+					if (opts.overlay) pipeline.unshift(['overlayWith', [opts.overlay, opts.overlayOpts || {cutout: true}]]);
 					if (opts.resizeOpts) {
 						let resizeOpts = opts.resizeOpts;
-						if (resizeOpts.crop) pipelines.unshift(['crop', [resizeOpts.crop]]);
-						else if (resizeOpts.embed) pipelines.unshift(['embed']);
-						else if (resizeOpts.min) pipelines.unshift(['min']);
-						else if (resizeOpts.max) pipelines.unshift(['max']);
-						else if (resizeOpts.ignoreAspectRatio) pipelines.unshift(['ignoreAspectRatio']);
-						else if (resizeOpts.withoutEnlargement) pipelines.unshift(['withoutEnlargement', [true]]);
+						if (resizeOpts.crop) pipeline.unshift(['crop', [resizeOpts.crop]]);
+						else if (resizeOpts.embed) pipeline.unshift(['embed']);
+						else if (resizeOpts.min) pipeline.unshift(['min']);
+						else if (resizeOpts.max) pipeline.unshift(['max']);
+						else if (resizeOpts.ignoreAspectRatio) pipeline.unshift(['ignoreAspectRatio']);
+						else if (resizeOpts.withoutEnlargement) pipeline.unshift(['withoutEnlargement', [true]]);
 					}
-					if (opts.width || opts.height) pipelines.unshift(['resize', [opts.width? opts.width : meta.width, opts.height? opts.height : meta.height]]);
+					if (opts.width || opts.height) pipeline.unshift(['resize', [opts.width? opts.width : meta.width, opts.height? opts.height : meta.height]]);
+					
+					// for advanced user only, need to understand sharp api pretty well
+					if (opts.pipeline) pipeline = opts.pipeline.concat(pipeline);
 
-					pipelines.reduce((obj, stage) => obj[stage[0]].apply(obj, stage[1]), image).then(buffer => {
+					pipeline.reduce((obj, stage) => obj[stage[0]].apply(obj, stage[1]), image).then(buffer => {
 						done(null, buffer);
 					}).catch(err => {
 						console.log(err);
