@@ -1,7 +1,7 @@
 'use strict';
 
 // depencies
-const BufferStreams = require('bufferstreams');
+const BufferStreams = require('bufferstreams'),
 	through = require('through2'),
 	gutil = require('gulp-util'),
 	sharp = require('sharp');

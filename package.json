@@ -1,6 +1,6 @@
 {
   "name": "gulp-imgconv",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "a gulp plugin to convert images (usually format conversion, resizing, overlaying, etc.) for distribution",
   "main": "gulp-imgconv.js",
   "scripts": {
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/tibetty/gulp-imgconv#readme",
   "dependencies": {
+    "bufferstreams": "^1.1.1",
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.8",
     "sharp": "^0.18.2",
