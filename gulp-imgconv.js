@@ -52,22 +52,16 @@ module.exports = (opts) => {
 					
 					// for advanced user only, need to understand sharp api pretty well
 					if (opts.pipeline) pipeline = opts.pipeline.concat(pipeline);
-					pipeline.reduce((obj, stage) => {
-						try {
-							return obj[stage[0]].apply(obj, stage[1]);
-						} catch (err) {
-							done(new gutil.PluginError(PLUGIN_NAME, err));
-						}
-					}, image).then(buffer => {
+					pipeline.reduce((obj, stage) => obj[stage[0]].apply(obj, stage[1]), image).then(buffer => {
 						done(null, buffer);
 					}).catch(err => {
-						done(new gutil.PluginError(PLUGIN_NAME, err));
+						done(new gutil.PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
 					});
 				}).catch(err => {
-					done(new gutil.PluginError(PLUGIN_NAME, err));
+					done(new gutil.PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
 				});
 			} else {
-				done(new gutil.PluginError(PLUGIN_NAME, 'Unsupported image format'));
+				done(new gutil.PluginError(PLUGIN_NAME, `[${file.path}] Unsupported image format`));
 			}
 		}
 
