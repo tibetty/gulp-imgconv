@@ -28,6 +28,7 @@ module.exports = (opts) => {
 	if (format === 'jpg') format = 'jpeg';
 	else if (format === 'gif' || format === 'svg') ext = format = 'png';
 
+	// don't use arrow function, otherwise this will become undefined
 	return through.obj(function(file, enc, cb) {
 		let self = this;
 		
@@ -85,9 +86,9 @@ module.exports = (opts) => {
 							file.contents = contents;
 							self.push(file);
 						}
-						cb();
 					});
 				}
+				cb();
 			}));
 			return;
 		}
