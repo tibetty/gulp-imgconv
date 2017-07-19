@@ -37,7 +37,7 @@ gulp.task('convert', () => {
       crop/embed/min/max/ignoreAspectRatio/withoutEnlargement: mutual exclusive; crop is followed by options (for more details, please visit http://sharp.dimens.io), others are true/false.
 
 - `overlay`
-    String or Buffer, the svg file or the svg content to overlay upon image.
+    String or Buffer, the svg/png file name (String) or the data (Buffer) to overlay upon original image.
     - `overlayOpts`
       You can find the structure definition from http://sharp.dimens.io/.
 
