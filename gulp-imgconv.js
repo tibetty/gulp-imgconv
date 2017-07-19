@@ -75,6 +75,7 @@ module.exports = (opts) => {
 				if (err) {
 					done(err);
 					self.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
+					cb();
 				} else {
 					convertImage(buf, (err, contents) => {
 						if (err) {
@@ -86,9 +87,9 @@ module.exports = (opts) => {
 							file.contents = contents;
 							self.push(file);
 						}
+						cb();
 					});
 				}
-				cb();
 			}));
 			return;
 		}
