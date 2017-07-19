@@ -52,15 +52,16 @@ module.exports = (opts) => {
 					
 					// for advanced user only, need to understand sharp api pretty well
 					if (opts.pipeline) pipeline = opts.pipeline.concat(pipeline);
-
-					pipeline.reduce((obj, stage) => obj[stage[0]].apply(obj, stage[1]), image).then(buffer => {
-						done(null, buffer);
-					}).catch(err => {
-						console.log(err);
+					try {
+						pipeline.reduce((obj, stage) => obj[stage[0]].apply(obj, stage[1]), image).then(buffer => {
+							done(null, buffer);
+						}).catch(err => {
+							done(new gutil.PluginError(PLUGIN_NAME, err));
+						})
+					} catch (err) {
 						done(new gutil.PluginError(PLUGIN_NAME, err));
-					})
+					}
 				}).catch(err => {
-					console.log(err);
 					done(new gutil.PluginError(PLUGIN_NAME, err));
 				});
 			} else {
