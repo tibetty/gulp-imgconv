@@ -47,6 +47,9 @@ gulp.task('convert', () => {
     - `overlayOpts`
       You can find the structure definition from http://sharp.dimens.io/.
 
+- `pipeline`
+    A naive encapsulation for other sharp methods, each element of this array is comprised of method name (in string), and its args as the nested array.
+
 Credits
 ---------------
 
