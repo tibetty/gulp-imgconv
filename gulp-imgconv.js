@@ -2,8 +2,8 @@
 
 // depencies
 const BufferStreams = require('bufferstreams'),
+	PluginError = require('plugin-error'),
 	through = require('through2'),
-	gutil = require('gulp-util'),
 	sharp = require('sharp');
 
 // consts
@@ -55,13 +55,13 @@ module.exports = (opts) => {
 					pipeline.reduce((obj, stage) => obj[stage[0]].apply(obj, stage[1]), image).then(buffer => {
 						done(null, buffer);
 					}).catch(err => {
-						done(new gutil.PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
+						done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
 					});
 				}).catch(err => {
-					done(new gutil.PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
+					done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
 				});
 			} else {
-				done(new gutil.PluginError(PLUGIN_NAME, `[${file.path}] Unsupported image format`));
+				done(new PluginError(PLUGIN_NAME, `[${file.path}] Unsupported image format`));
 			}
 		}
 
@@ -71,7 +71,7 @@ module.exports = (opts) => {
 			file.contents.pipe(new BufferStreams((err, buf, done) => {
 				if (err) {
 					done(err);
-					self.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
+					self.emit('error', new PluginError(PLUGIN_NAME, err));
 					cb();
 				} else {
 					convertImage(buf, (err, contents) => {
