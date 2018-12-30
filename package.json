@@ -29,10 +29,10 @@
   },
   "homepage": "https://github.com/tibetty/gulp-imgconv#readme",
   "dependencies": {
-    "bufferstreams": "^1.1.1",
-    "gulp": "^3.9.1",
-    "plugin-error": "^1.0.1",
-    "sharp": "^0.18.2",
-    "through2": "^2.0.3"
+    "bufferstreams": "latest",
+    "gulp": "latest",
+    "plugin-error": "latest",
+    "sharp": "latest",
+    "through2": "latest"
   }
 }
