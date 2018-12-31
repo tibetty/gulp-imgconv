@@ -20,13 +20,11 @@ gulp.task('convert', () => {
       format: 'png',
       width: 100,
       height: 100,
-      overlay: new Buffer('<svg><circle r="50" cx="50" cy="50"/></svg>')
+      overlay: new Buffer('<svg><circle r="50" cx="50" cy="50"/></svg>'),
       resizeOpts: {
-        embed: true
-      },
-      pipeline: [[
-        'background', ['#00000000']
-      ]]
+        fit: 'contain',
+        background: '#00000000'
+      }
     }))
     .pipe(gulp.dest('dist/images'))
 });
@@ -40,7 +38,7 @@ gulp.task('convert', () => {
 - `width`, `height`
     The width & height that the image will be resized to; when only one field is specified, the other one will use the image's.  
     - `resizeOpts`
-      crop/embed/min/max/ignoreAspectRatio/withoutEnlargement: mutual exclusive; crop is followed by options (for more details, please visit http://sharp.dimens.io), others are true/false.
+      options parameters for `sharp.resize()`, please visit http://sharp.dimens.io for more details.
 
 - `overlay`
     String or Buffer, the svg/png file name (String) or the data (Buffer) to overlay upon original image.
