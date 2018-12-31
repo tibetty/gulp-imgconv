@@ -39,17 +39,10 @@ module.exports = (opts) => {
 					let pipeline = [['toFormat', [format]], ['toBuffer']];
 					if (opts.formatOpts) pipeline.unshift([format, [opts.formatOpts]]);
 					if (opts.overlay) pipeline.unshift(['overlayWith', [opts.overlay, opts.overlayOpts || {cutout: true}]]);
-					if (opts.resizeOpts) {
-						let resizeOpts = opts.resizeOpts;
-						if (resizeOpts.crop) pipeline.unshift(['crop', [resizeOpts.crop]]);
-						else if (resizeOpts.embed) pipeline.unshift(['embed']);
-						else if (resizeOpts.min) pipeline.unshift(['min']);
-						else if (resizeOpts.max) pipeline.unshift(['max']);
-						else if (resizeOpts.ignoreAspectRatio) pipeline.unshift(['ignoreAspectRatio']);
-						else if (resizeOpts.withoutEnlargement) pipeline.unshift(['withoutEnlargement', [true]]);
-					}
-					if (opts.width || opts.height) pipeline.unshift(['resize', [opts.width? opts.width : meta.width, opts.height? opts.height : meta.height]]);
-					
+					let resizeOpts = opts.resizeOpts || {};
+					resizeOpts.width = opts.width? opts.width : meta.width;
+					resizeOpts.height = opts.width? opts.height : meta.height;
+					pipeline.unshift(['resize', [resizeOpts]]);
 					// for advanced user only, need to understand sharp api pretty well
 					if (opts.pipeline) pipeline = opts.pipeline.concat(pipeline);
 					pipeline.reduce((obj, stage) => obj[stage[0]].apply(obj, stage[1]), image).then(buffer => {
