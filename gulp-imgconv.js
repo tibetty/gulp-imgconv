@@ -13,11 +13,9 @@ const PLUGIN_NAME = 'gulp-imgconv';
 // + format: the output format, right now supports jpeg, png & webp
 // + formatOpts: conversion options for output format
 // + width/height: size for resizing operation, if only one field was specified, the other field will use the original one
-// + resizeOpts:
-// +--+ crop/embed/min/max/ignoreAspectRatio/withoutEnlargement: mutual exclusive; crop is followed by options, others are true/false
+// + resizeOpts: the options of sharp.resize(), please find more details from http://sharp.dimens.io/
 // + overlay: follows the the svg to overlay upon image
-// + overlayOpts: please find its structure definition from http://sharp.dimens.io/
-// +--+ overlayWith option object for sharp
+// + overlayOpts: the options of sharp.overlayWith(), please find its structure definition from http://sharp.dimens.io/
 
 // module exports
 module.exports = (opts) => {

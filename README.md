@@ -14,7 +14,7 @@ npm i gulp-imgconv --save-dev
 const gulp = require('gulp'), 
   convert = require('gulp-imgconv');
 
-gulp.task('convert', () => {
+gulp.task('convert', done => {
   gulp.src('dev/images/*.jpg')
     .pipe(convert({
       format: 'png',
@@ -26,7 +26,8 @@ gulp.task('convert', () => {
         background: '#00000000'
       }
     }))
-    .pipe(gulp.dest('dist/images'))
+    .pipe(gulp.dest('dist/images'));
+    done();
 });
 ```
 ## Options
