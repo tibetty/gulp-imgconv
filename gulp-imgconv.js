@@ -15,7 +15,7 @@ const PLUGIN_NAME = 'gulp-imgconv';
 // + width/height: size for resizing operation, if only one field was specified, the other field will use the original one
 // + resizeOpts: the options of sharp.resize(), please find more details from http://sharp.dimens.io/
 // + overlay: follows the the svg to overlay upon image
-// + overlayOpts: the options of sharp.overlayWith(), please find its structure definition from http://sharp.dimens.io/
+// + overlayOpts: the options of sharp.composit(), please find its structure definition from http://sharp.dimens.io/
 
 // module exports
 module.exports = (opts) => {
@@ -36,7 +36,7 @@ module.exports = (opts) => {
 				image.metadata().then(meta => {
 					let pipeline = [['toFormat', [format]], ['toBuffer']];
 					if (opts.formatOpts) pipeline.unshift([format, [opts.formatOpts]]);
-					if (opts.overlay) pipeline.unshift(['overlayWith', [opts.overlay, opts.overlayOpts || {cutout: true}]]);
+					if (opts.overlay) pipeline.unshift(['composite', [[Object.assign({input: opts.overlay}, opts.overlayOpts || {cutout: true})]]]);
 					let resizeOpts = opts.resizeOpts || {};
 					resizeOpts.width = opts.width? opts.width : meta.width;
 					resizeOpts.height = opts.width? opts.height : meta.height;
