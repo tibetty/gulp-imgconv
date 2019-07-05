@@ -1,10 +1,10 @@
 {
   "name": "gulp-imgconv",
   "version": "0.6.6",
-  "description": "a gulp plugin to convert images (usually format conversion, resizing, overlaying, etc.) for distribution",
-  "main": "gulp-imgconv.js",
+  "description": "a gulp plugin to convert images (format conversion, resizing, cutting in/out, watermarking etc.) for distribution",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run --prefix test test"
   },
   "repository": {
     "type": "git",
