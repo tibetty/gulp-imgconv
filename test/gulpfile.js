@@ -6,7 +6,7 @@ exports.cflg = () => {
         .pipe(convert({
             format: 'png',
             width: 480,
-            height: 360,
+            height: 480,
             cutin: Buffer.from('<svg><circle r="180" cx="180" cy="180"/></svg>'),
             watermark: 'flags/watermark.png',
             resizeOpts: {

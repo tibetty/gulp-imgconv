@@ -44,13 +44,13 @@ Options
 
 - **width**, **height**
     Width and height to resize to; when an attribute is ommitted, the value of the original image will be used.  
-    - **resizeOpts**
-    optional parameters for `sharp.resize()`, please visit http://sharp.dimens.io for more details.
+    - **resizeOpts?**
+        You can find a simple help from the `resizeOptsHelper` object of this package, please  turn to `sharp.resize()`(http://sharp.dimens.io) for more details.
 
 - **cutin/cutout/watermark**
     String or Buffer, the svg/png file name (String) or the data (Buffer) to overlay upon the original image.
-    - **cutinOpts/cutoutOpts/watermarkOpts**
-    You can find the structure definition from the `sharp.composite()` in http://sharp.dimens.io/.
+    - **cutinOpts/cutoutOpts/watermarkOpts?**
+        You can find a simple help from the `compositeOptsHelper` object of this package, please turn to `sharp.composite()` http://sharp.dimens.io/) for more details.
 
 - **pipeline**
     A simple encapsulation for other sharp methods, an `Array` comprised of the method name (in `string`), and calling args in `Array` as the 2nd element.
