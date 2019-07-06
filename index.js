@@ -39,9 +39,9 @@ module.exports = (opts) => {
 
                     const compositePipeline = [];
                     const dispatchTable = {
-                        cutin: () => compositePipeline.push(Object.assign({input: opts.cutin, blend: 'dest-in'}, opts.cutinOpts | {})),
-                        cutout: () => compositePipeline.push(Object.assign({input: opts.cutout, blend: 'dest-out'}, opts.cutoutOpts | {})),
-                        watermark: () => compositePipeline.push(Object.assign({input: opts.watermark, blend: 'over'}, opts.watermarkOpts | {}))
+                        cutin: () => compositePipeline.push(Object.assign({input: opts.cutin, blend: 'dest-in'}, opts.cutinOpts || {})),
+                        cutout: () => compositePipeline.push(Object.assign({input: opts.cutout, blend: 'dest-out'}, opts.cutoutOpts || {})),
+                        watermark: () => compositePipeline.push(Object.assign({input: opts.watermark, blend: 'over'}, opts.watermarkOpts || {}))
                     };
 
                     // sequence sensitive operations, right now only support cutin, cutout, watermark
@@ -134,9 +134,7 @@ module.exports = (opts) => {
 	            if (value instanceof Object) {
 	            	if (value instanceof Array) {
 	            		result[key] = new Proxy(value, {
-							set: function(target, property, value, receiver) {
-								return true;
-							}
+							set: (target, property, value, receiver) => true
 						})
 	            	} else {
 	            		result[key] = constantize(value);
