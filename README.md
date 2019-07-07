@@ -1,7 +1,7 @@
 gulp-imgconv
 ==========
 
-A gulp plugin to convert images including format conversion, resizing, overlaying, etc. for distribution
+A gulp plugin to convert images including format conversion, resizing, overlaying, etc. for distribution powered by sharp.
 
 Installation
 ---
@@ -15,45 +15,44 @@ Usage
 ```javascript
 // A sample gulpfile.js in gulp 4.0 style
 const gulp = require('gulp'), 
-    convert = require('gulp-imgconv');
+    gic = require('gulp-imgconv');
 
 exports.imgconv = () => {
     gulp.src('dev/images/*.jpg')
-        .pipe(convert({
-            format: 'png',
-            width: 100,
-            height: 100,
-            // CAUTION: the overlaying functions are sequence sensitive
-            cutin: new Buffer('<svg><circle r="50" cx="50" cy="50"/></svg>'),
-            // cutout: new Buffer('<svg><circle r="50" cx="50" cy="50"/></svg>'), 
-            watermark: '/path/to/watermark.png',    // need to be smaller than original picture;
-            resizeOpts: {
-                fit: 'contain',
-                background: '#00000000'
-            }
-    }))
+    .pipe(gic([
+        gic.resize(480, 360, {
+            fit: 'contain',
+            background: '#00000000'    
+        }),
+        gic.cutin(Buffer.from('<svg><circle r="180" cx="180" cy="180"/></svg>')),
+        gic.watermark('flags/watermark.png', {
+            left: 320,
+            top: 240
+        }),
+        gic.blur(2),
+        gic.grayscale(),
+        gic.toFormat('png')
+    ]))
     .pipe(gulp.dest('dist/images')); 
 };
 ```
-Options
+Arguments
 ---
-- **format**
-    Image format to convert to, right now supports jpeg, png and webp; when it's ommitted, the format will be derived from the orginal file extension.
-    - **formatOpts**
-    format options for advanced users, please find more details from http://sharp.dimens.io/.
+### The argument is a pipeline in `Array` design, and there're 2 basic internal functions:
+- **resize(widith?: number, height?: number, opts?: {[k: string]: any})**
+    Where `width` and `height` are size to resize to; when any parameter is ommitted, the value of the original image will be used. Please refer to `resizeOptsHelper` object of this package to learn how to make up a correct `opts` object.
+- **toFormat(fmt: string, opts?: {[k: string]: any})**
+    Where `fmt` are format to convert to (right now supports 'jpeg', 'png' and 'webp'). There are quite a few option choices for each format, please find more details from [sharp official document] (http://sharp.dimens.io)
+    
+### And 3 overlaying related featured functions inspired by my past experiences:
+- **cutin/cutout/watermark(src: Buffer | string, opts: {[k: string]: any})**
+    Where `src` is either the svg/png file name (in string) or the data (in Buffer) to overlay upon the original image, and you can learn how to construct the basic `opts` argument with the help of `compositeOptsHelper`, or read sharp official document to comprehensively understand the exact meaning of each option.
+    
+### Moreover, almost all other transformation related functions of [sharp](http://sharp.dimens.io) are supported with the same function prototype, please feel free to use like what I did in our example.
 
-- **width**, **height**
-    Width and height to resize to; when an attribute is ommitted, the value of the original image will be used.  
-    - **resizeOpts?**
-        You can find a simple help from the `resizeOptsHelper` object of this package, please  turn to `sharp.resize()`(http://sharp.dimens.io) for more details.
-
-- **cutin/cutout/watermark**
-    String or Buffer, the svg/png file name (String) or the data (Buffer) to overlay upon the original image.
-    - **cutinOpts/cutoutOpts/watermarkOpts?**
-        You can find a simple help from the `compositeOptsHelper` object of this package, please turn to `sharp.composite()` http://sharp.dimens.io/) for more details.
-
-- **pipeline**
-    A simple encapsulation for other sharp methods, an `Array` comprised of the method name (in `string`), and calling args in `Array` as the 2nd element.
+Thanks
+---
+Special gratitude to [sharp](https://www.npmjs.com/package/sharp) and other dependencies 
 
 Author
 ---
