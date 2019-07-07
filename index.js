@@ -14,26 +14,26 @@ module.exports = (pipeline) => {
     let ext = 'png';
     const ctx = this;
 
-    const executePlan = [];
+    const execPlan = [];
     let compositeIndex = -1;
     for (const stage of pipeline) {
-        executePlan.push(stage);
+        execPlan.push(stage);
         if (stage.func === 'resize') {
             stage.args[0].width = stage.args[0].width || meta.width;
             stage.args[0].height = stage.args[0].height || meta.height;
-        } else if (stage.func === 'composite') {
-            executePlan.pop();
+        } else if (stage.func === 'composite') {                // Only one composite invocation will take effect, so we need to combine many composite calling to one with combined pipeline 
+            execPlan.pop();
             if (compositeIndex < 0) {
-                compositeIndex = executePlan.length;
+                compositeIndex = execPlan.length;
                 stage.args = [stage.args];
-                executePlan.push(stage);
+                execPlan.push(stage);
             } else {
-                executePlan[compositeIndex].args[0].push(stage.args[0]);
+                execPlan[compositeIndex].args[0].push(stage.args[0]);
             }
         }
     }
 
-    executePlan.push({func: 'toBuffer', args: []});
+    execPlan.push({func: 'toBuffer', args: []});
 
     // don't use arrow function, otherwise 'this' will become undefined
     return through.obj(function(file, enc, cb) {
@@ -43,7 +43,7 @@ module.exports = (pipeline) => {
             image.metadata().then(meta => {
                 ext = ctx.format;
                 if (['jpeg', 'png', 'webp'].indexOf(ctx.format) >= 0) {
-                    executePlan.reduce((o, stage) => {
+                    execPlan.reduce((o, stage) => {
                         try {
                             return o[stage.func].apply(o, stage.args);
                         } catch (err) {
@@ -103,7 +103,10 @@ module.exports = (pipeline) => {
     });
 }
 
+
+// IIFE to incorporate other package fields
 (() => {
+    // make an object really immutable, no modification and no extension
     function constantize(proto) {
         if (proto instanceof Object) {
             const result = {};
@@ -165,7 +168,7 @@ module.exports = (pipeline) => {
             return {func: fmt, args};
         },
 
-        // featured function
+        // featured functions
         cutin: (src, opts) => {
             return {func: 'composite', args: [Object.assign({input: src, blend: 'dest-in'}, opts || {})]};
         },
