@@ -114,7 +114,7 @@ module.exports = (pipeline) => {
             cb();
         });
     }, callback => {
-        let msg = `In total processed ${chalk.cyan.bold(totalFiles)} images'`;
+        let msg = `In total processed ${chalk.cyan.bold(totalFiles)} image(s)`;
         log(`${PLUGIN_NAME}:`, msg);
         msg = `${chalk.gray.bold(prettyBytes(originalBytes))} -> ${chalk.green.bold(prettyBytes(convertedBytes))}`;
         log(`${PLUGIN_NAME}:`, msg);
