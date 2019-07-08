@@ -24,7 +24,7 @@ module.exports = (pipeline) => {
         if (stage.func === 'resize') {
             stage.args[0].width = stage.args[0].width || meta.width;
             stage.args[0].height = stage.args[0].height || meta.height;
-        // Only one composite invocation will take effect, so we need to combine many composite calling to one with combined pipeline 
+        // only one composite invocation will take effect, so we need to combine many composite calling to one with combined pipeline 
         } else if (stage.func === 'composite') {                
             execPlan.pop();
             if (compositeIndex < 0) {
@@ -158,8 +158,8 @@ module.exports = (pipeline) => {
             kernel: ['nearest', 'cubic', 'mitchell', 'lanczos2', 'lanczos3'],
             position: ['centre', 'top left', 'top right', 'bottom left', 'bottom right'],
             background: 'placeholder<a color object like {r:0,g:0,b:0,alpha:1} or a string like \'#rrbbggaa\'>',
-            withoutEnlargement: 'placeholder<whether to enlarge, in Boolean>',
-            fastShrinkOnLoad: 'placeholder<whether to do fast shrink, in Boolean>'
+            withoutEnlargement: 'placeholder<whether to enlarge, as a boolean>',
+            fastShrinkOnLoad: 'placeholder<whether to do fast shrink, as a boolean>'
         },
 
         compositeOptsHelper: {
