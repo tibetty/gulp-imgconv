@@ -52,7 +52,6 @@ module.exports = (pipeline) => {
                 try {
                     const meta = await image.metadata();
                 } catch (err) {
-                    log(`${PLUGIN_NAME}:`, `${chalk.red(err)}`);
                     done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
                 }
 
@@ -65,7 +64,6 @@ module.exports = (pipeline) => {
                         convertedBytes += contents.length;
                         done(null, contents);
                     } catch (err) {
-                        log(`${PLUGIN_NAME}:`, `${chalk.red(err)}`);
                         done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
                     }
                 } else {
@@ -81,7 +79,6 @@ module.exports = (pipeline) => {
         if (file.isStream()) {
             file.contents.pipe(new BufferStreams((err, buf, done) => {
                 if (err) {
-                    log(`${PLUGIN_NAME}:`, `${chalk.red(err)}`);
                     self.emit('error', new PluginError(PLUGIN_NAME, err));
                     cb();
                 } else {
@@ -104,7 +101,6 @@ module.exports = (pipeline) => {
 
         convertImage(file.contents, (err, contents) => {
             if (err) {
-                log(`${PLUGIN_NAME}:`, `${chalk.red(err)}`);
                 self.emit('error', err);
             } else {
                 file.path = file.path.replace(/[^\.]+$/, ext);

@@ -13,9 +13,12 @@ exports.cflg = () => {
                     left: 320,
                     top: 240
                 }),
-                gic.blur(2),
+                // gic.blur(2),
+                gic.sharpen(),
                 gic.grayscale(),
-                gic.toFormat('png')
+                gic.toFormat('png', {
+                    quality: 80
+                })
             ]))
         .pipe(gulp.dest('flags/png'));
 };
