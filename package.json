@@ -30,9 +30,12 @@
   "homepage": "https://github.com/tibetty/gulp-imgconv#readme",
   "dependencies": {
     "bufferstreams": "^2.0.1",
+    "chalk": "^2.4.2",
     "gulp": "^4.0.0",
+    "log": "^6.0.0",
     "plugin-error": "^1.0.1",
+    "pretty-bytes": "^5.2.0",
     "sharp": "^0.22.1",
-    "through2": "^3.0.0"
+    "through2-concurrent": "^2.0.0"
   }
 }

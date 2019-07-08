@@ -2,10 +2,13 @@
 
 // depencies
 const BufferStreams = require('bufferstreams'),
+    chalk = require('chalk'),
+    log = require('fancy-log'),
     PluginError = require('plugin-error'),
-    through = require('through2'),
-    sharp = require('sharp');
-
+    prettyBytes = require('pretty-bytes'),
+    sharp = require('sharp'),
+    through = require('through2-concurrent');
+    
 // plugin names
 const PLUGIN_NAME = 'gulp-imgconv';
 
@@ -21,7 +24,8 @@ module.exports = (pipeline) => {
         if (stage.func === 'resize') {
             stage.args[0].width = stage.args[0].width || meta.width;
             stage.args[0].height = stage.args[0].height || meta.height;
-        } else if (stage.func === 'composite') {                // Only one composite invocation will take effect, so we need to combine many composite calling to one with combined pipeline 
+        // Only one composite invocation will take effect, so we need to combine many composite calling to one with combined pipeline 
+        } else if (stage.func === 'composite') {                
             execPlan.pop();
             if (compositeIndex < 0) {
                 compositeIndex = execPlan.length;
@@ -35,40 +39,49 @@ module.exports = (pipeline) => {
 
     execPlan.push({func: 'toBuffer', args: []});
 
+    let totalFiles = 0;
+    let originalBytes = 0;
+    let convertedBytes = 0;
     // don't use arrow function, otherwise 'this' will become undefined
     return through.obj(function(file, enc, cb) {
         const self = this;
+        
         function convertImage(buf, done) {
             const image = sharp(buf);
-            image.metadata().then(meta => {
+            (async () => {
+                try {
+                    const meta = await image.metadata();
+                } catch (err) {
+                    log(`${PLUGIN_NAME}:`, `${chalk.red(err)}`);
+                    done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
+                }
+
                 ext = ctx.format;
                 if (['jpeg', 'png', 'webp'].indexOf(ctx.format) >= 0) {
-                    execPlan.reduce((o, stage) => {
-                        try {
-                            return o[stage.func].apply(o, stage.args);
-                        } catch (err) {
-                            console.error(err);
-                            done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
-                        }
-                    }, image).then(buffer => {
-                        done(null, buffer);
-                    }).catch(err => {
+                    try {
+                        const contents = await execPlan.reduce((o, stage) => o[stage.func].apply(o, stage.args), image);
+                        totalFiles++;
+                        originalBytes += buf.length;
+                        convertedBytes += contents.length;
+                        done(null, contents);
+                    } catch (err) {
+                        log(`${PLUGIN_NAME}:`, `${chalk.red(err)}`);
                         done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
-                    });
+                    }
                 } else {
                     done(new PluginError(PLUGIN_NAME, `[${file.path}] Unsupported image format`));
                 }
-            }).catch(err => {
-                done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
-            });
+            })();
         }
 
-        if (file.isNull()) return cb(null, file);
+        if (file.isNull()) {
+            return cb(null, file);
+        }
 
         if (file.isStream()) {
             file.contents.pipe(new BufferStreams((err, buf, done) => {
                 if (err) {
-                    console.error(err);
+                    log(`${PLUGIN_NAME}:`, `${chalk.red(err)}`);
                     self.emit('error', new PluginError(PLUGIN_NAME, err));
                     cb();
                 } else {
@@ -91,7 +104,7 @@ module.exports = (pipeline) => {
 
         convertImage(file.contents, (err, contents) => {
             if (err) {
-                console.error(err);
+                log(`${PLUGIN_NAME}:`, `${chalk.red(err)}`);
                 self.emit('error', err);
             } else {
                 file.path = file.path.replace(/[^\.]+$/, ext);
@@ -100,13 +113,19 @@ module.exports = (pipeline) => {
             }
             cb();
         });
+    }, callback => {
+        let msg = `In total processed ${chalk.cyan.bold(totalFiles)} images'`;
+        log(`${PLUGIN_NAME}:`, msg);
+        msg = `${chalk.gray.bold(prettyBytes(originalBytes))} -> ${chalk.green.bold(prettyBytes(convertedBytes))}`;
+        log(`${PLUGIN_NAME}:`, msg);
+        callback();
     });
 }
 
 
-// IIFE to incorporate other package fields
+// IIFE to integrate other package fields
 (() => {
-    // make an object really immutable, no modification and no extension
+    // make an object really immutable, prevented from modification and extension
     function constantize(proto) {
         if (proto instanceof Object) {
             const result = {};
@@ -179,7 +198,7 @@ module.exports = (pipeline) => {
 
         watermark: (src, opts) => {
             return {func: 'composite', args: [Object.assign({input: src, blend: 'over'}, opts || {})]};
-        },
+        }
     };
 
     const directFuncs = ['rotate', 'flip', 'flop', 'sharpen', 'median', 'blur', 'flatten', 'gamma', 'negate', 'linear', 'normalise', 'convolve', 'threshould', 'boolean', 'recomb', 'modulate',
