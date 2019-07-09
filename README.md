@@ -48,7 +48,14 @@ Arguments
 - ***cutin/cutout/watermark(src: Buffer | string, opts?: {[k: string]: any})***
     - Where `src` is either the svg/png file name (in string) or the data (in Buffer) to overlay upon the original image, and you can learn how to construct the basic `opts` argument with the help of `compositeOptsHelper`, or read sharp official document to comprehensively understand the exact meaning of each option.
     
-#### Moreover, almost all other transformation related functions of [sharp](http://sharp.dimens.io) are supported with the same function prototype, please feel free to use like what I did in our example.
+#### Moreover, almost all other transformation related functions of [sharp](http://sharp.dimens.io) are supported with the same function prototype, please feel free to use like what I did in the test:
+- ***extend***, ***extract***, ***trim***
+- ***rotate***, ***flip***, ***flop***
+- ***sharpen***, ***median***, ***blur***
+- ***flatten***, ***gamma***, ***negate***, ***linear***, ***normalize***, ***convolve***, ***threshould***, ***recomb***, ***modulate***
+- ***tint***, ***grayscale***, ***toColorspace***
+- ***removeAlpha***, ***ensureAlpha***, ***extractChannel***, ***joinChannel***, ***bandbool***
+- ***composite***, ***boolean***
 
 Thanks
 ---

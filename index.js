@@ -197,7 +197,7 @@ module.exports = (pipeline) => {
         }
     };
 
-    const directFuncs = ['rotate', 'flip', 'flop', 'sharpen', 'median', 'blur', 'flatten', 'gamma', 'negate', 'linear', 'normalise', 'convolve', 'threshould', 'boolean', 'recomb', 'modulate',
+    const directFuncs = ['rotate', 'flip', 'flop', 'sharpen', 'median', 'blur', 'flatten', 'gamma', 'negate', 'linear', 'normalize', 'convolve', 'threshould', 'boolean', 'recomb', 'modulate',
         'extend', 'extract', 'trim', 'tint', 'grayscale', 'toColorspace', 'removeAlpha', 'ensureAlpha', 'extractChannel', 'joinChannel', 'bandbool', 'composite'];
 
     for (const func of directFuncs) {
