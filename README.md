@@ -12,7 +12,7 @@ npm install gulp-imgconv --save-dev
 
 Usage
 ---
-#### DISTRIBUTION: resize all images under `src/`, cutin with a round shape, add a watermark, sharpen, grascale, boolean with a 5-pointed star and save them to `dst/` in PNG format
+- DISTRIBUTION: resize all images under `src/`, cutin with a round shape, add a watermark, sharpen, grascale, boolean with a 5-pointed star and save them to `dst/` in PNG format
 ```javascript
 const gulp = require('gulp'), 
     gic = require('gulp-imgconv');
@@ -50,11 +50,11 @@ exports.imgconv = () => {
     .pipe(gulp.dest('dst/')); 
 };
 ```
-***Click below links to see the conversion effect***
-[Original](https://raw.githubusercontent.com/tibetty/gulp-imgconv/master/test/src/beach.jpg)
-[Converted](https://raw.githubusercontent.com/tibetty/gulp-imgconv/master/test/dst/beach.png)
+*Click below links to see the conversion effect*
+- [Original](https://raw.githubusercontent.com/tibetty/gulp-imgconv/master/test/src/beach.jpg)
+- [Converted](https://raw.githubusercontent.com/tibetty/gulp-imgconv/master/test/dst/beach.png)
 
-#### PROCESSING: resize the original images in `src/` to width = 800, sharpen, grayscale them and save in `dst/` in corresponding formats (SVG, GIF -> PNG, otherwise the old format)
+- PROCESSING: resize the original images in `src/` to width = 800, sharpen, grayscale them and save in `dst/` in corresponding formats (SVG, GIF -> PNG, otherwise the old format)
 ```javascript
 const gulp = require('gulp'), 
 gic = require('gulp-imgconv');
