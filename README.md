@@ -12,7 +12,7 @@ npm install gulp-imgconv --save-dev
 
 Usage
 ---
-### DISTRIBUTION: resize all images under `src/`, cutin with a round shape, add a watermark, and save them to `dst/` in PNG format
+### DISTRIBUTION: resize all images under `src/`, cutin with a round shape, add a watermark, sharpen, grascale, boolean with a 5-pointed star and save them to `dst/` in PNG format
 ```javascript
 const gulp = require('gulp'), 
     gic = require('gulp-imgconv');
@@ -20,22 +20,40 @@ const gulp = require('gulp'),
 exports.imgconv = () => {
     gulp.src('src/*')
     .pipe(gic([
-        gic.resize(480, 360, {
+        gic.resize({
+            width: 640,
+            height: 480,
             fit: 'contain',
             background: '#00000000'    
         }),
-        gic.cutin(Buffer.from('<svg><circle r="180" cx="180" cy="180"/></svg>')),
+        gic.cutin(Buffer.from(`<?xml version="1.0" encoding="utf-8"?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 480 480">
+                <circle r="240" cx="240" cy="240"/>
+            </svg>`)),
         gic.watermark('png/watermark.png', {
-            left: 320,
-            top: 240
+            left: 400,
+            top: 280
         }),
-        gic.toFormat('png')
+        gic.sharpen(),
+        gic.grayscale(),
+        gic.boolean(Buffer.from(`<?xml version="1.0" encoding="utf-8"?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="255" height="240" viewBox="-20 0 71 48">
+                <title>Five Pointed Star</title>
+                <path fill="none" stroke="#000" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
+            </svg>`),
+            'eor'
+        ),
+        gic.toFormat('png', {
+            quality: 80
+        })
     ]))
     .pipe(gulp.dest('dst/')); 
 };
 ```
+***Click below links to see the conversion effect***
 [Original](https://raw.githubusercontent.com/tibetty/gulp-imgconv/master/test/src/beach.jpg)
 [Converted](https://raw.githubusercontent.com/tibetty/gulp-imgconv/master/test/dst/beach.png)
+
 ### PROCESSING: resize the original images in `src/` to width = 800, sharpen, grayscale them and save in `dst/` in corresponding formats (SVG, GIF -> PNG, otherwise the old format)
 ```javascript
 const gulp = require('gulp'), 
