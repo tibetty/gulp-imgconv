@@ -14,18 +14,12 @@ const PLUGIN_NAME = 'gulp-imgconv';
 
 // module exports
 module.exports = (pipeline) => {
-    let ext = 'png';
-    const ctx = this;
-
     const execPlan = [];
     let compositeIndex = -1;
     for (const stage of pipeline) {
         execPlan.push(stage);
-        if (stage.func === 'resize') {
-            stage.args[0].width = stage.args[0].width || meta.width;
-            stage.args[0].height = stage.args[0].height || meta.height;
         // only one composite invocation will take effect, so we need to combine many composite calling to one with combined pipeline 
-        } else if (stage.func === 'composite') {                
+        if (stage.func === 'composite') {                
             execPlan.pop();
             if (compositeIndex < 0) {
                 compositeIndex = execPlan.length;
@@ -37,7 +31,7 @@ module.exports = (pipeline) => {
         }
     }
 
-    execPlan.push({func: 'toBuffer', args: []});
+    execPlan.push({func: 'toBuffer', args: [{resolveWithObject: true}]});
 
     let totalFiles = 0;
     let originalBytes = 0;
@@ -51,23 +45,14 @@ module.exports = (pipeline) => {
             (async () => {
                 try {
                     const meta = await image.metadata();
+                    const {data: contents, info} = await execPlan.reduce((o, stage) => o[stage.func].apply(o, stage.args), image);
+                    contents.ext = info.format;
+                    totalFiles++;
+                    originalBytes += buf.length;
+                    convertedBytes += info.size;
+                    done(null, contents);
                 } catch (err) {
                     done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
-                }
-
-                ext = ctx.format;
-                if (['jpeg', 'png', 'webp'].indexOf(ctx.format) >= 0) {
-                    try {
-                        const contents = await execPlan.reduce((o, stage) => o[stage.func].apply(o, stage.args), image);
-                        totalFiles++;
-                        originalBytes += buf.length;
-                        convertedBytes += contents.length;
-                        done(null, contents);
-                    } catch (err) {
-                        done(new PluginError(PLUGIN_NAME, `[${file.path}] ${err}`));
-                    }
-                } else {
-                    done(new PluginError(PLUGIN_NAME, `[${file.path}] Unsupported image format`));
                 }
             })();
         }
@@ -88,7 +73,7 @@ module.exports = (pipeline) => {
                             self.emit('error', err);
                         } else {
                             done(null, contents);
-                            file.path = file.path.replace(/[^\.]+$/, ext);
+                            file.path = file.path.replace(/[^\.]+$/, contents.ext);
                             file.contents = contents;
                             self.push(file);
                         }
@@ -103,7 +88,7 @@ module.exports = (pipeline) => {
             if (err) {
                 self.emit('error', err);
             } else {
-                file.path = file.path.replace(/[^\.]+$/, ext);
+                file.path = file.path.replace(/[^\.]+$/, contents.ext);
                 file.contents = contents;
                 self.push(file);
             }
@@ -174,12 +159,7 @@ module.exports = (pipeline) => {
         },
 
         // basic functions
-        resize: (width, height, opts) => {
-            return {func: 'resize', args: [Object.assign({width, height}, opts || {})]};
-        },
-
         toFormat: (fmt, ...args) => {
-            this.format = fmt;
             return {func: fmt, args};
         },
 
@@ -197,7 +177,7 @@ module.exports = (pipeline) => {
         }
     };
 
-    const directFuncs = ['rotate', 'flip', 'flop', 'sharpen', 'median', 'blur', 'flatten', 'gamma', 'negate', 'linear', 'normalize', 'convolve', 'threshould', 'boolean', 'recomb', 'modulate',
+    const directFuncs = ['resize', 'rotate', 'flip', 'flop', 'sharpen', 'median', 'blur', 'flatten', 'gamma', 'negate', 'linear', 'normalize', 'convolve', 'threshould', 'boolean', 'recomb', 'modulate',
         'extend', 'extract', 'trim', 'tint', 'grayscale', 'toColorspace', 'removeAlpha', 'ensureAlpha', 'extractChannel', 'joinChannel', 'bandbool', 'composite'];
 
     for (const func of directFuncs) {

@@ -2,19 +2,21 @@ const gulp = require('gulp'),
     gic = require('../');
 
 exports.cflg = () => {
-    return gulp.src('flags/svg/*.svg')
+    return gulp.src('src/*')
         .pipe(gic([
-                gic.resize(480, 360, {
+                gic.resize({
+                    width: 640,
+                    height: 480,
                     fit: 'contain',
                     background: '#00000000'    
                 }),
                 gic.cutin(Buffer.from(`<?xml version="1.0" encoding="utf-8"?>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
-                        <circle r="180" cx="180" cy="180"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 480 480">
+                        <circle r="240" cx="240" cy="240"/>
                     </svg>`)),
-                gic.watermark('flags/watermark.png', {
-                    left: 320,
-                    top: 240
+                gic.watermark('png/watermark.png', {
+                    left: 400,
+                    top: 280
                 }),
                 // gic.blur(2),
                 gic.sharpen(),
@@ -25,7 +27,7 @@ exports.cflg = () => {
                 //    [0.2392, 0.4696, 0.0912],
                 // ]),
                 gic.boolean(Buffer.from(`<?xml version="1.0" encoding="utf-8"?>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="255" height="240" viewBox="0 0 51 48">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="255" height="240" viewBox="-20 0 71 48">
                         <title>Five Pointed Star</title>
                         <path fill="none" stroke="#000" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
                     </svg>`),
@@ -35,6 +37,6 @@ exports.cflg = () => {
                     quality: 80
                 })
             ]))
-        .pipe(gulp.dest('flags/png'));
+        .pipe(gulp.dest('dst'));
 };
 
