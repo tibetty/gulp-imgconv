@@ -135,6 +135,8 @@ module.exports = (pipeline) => {
 
     const proto = {
         resizeOptsHelper: {
+            width: 'placeholder<raw width, as a number>',
+            height: 'placeholder<raw height, as a number>',
             fit: ['cover', 'contain', 'fill', 'inside', 'outside'],
             kernel: ['nearest', 'cubic', 'mitchell', 'lanczos2', 'lanczos3'],
             position: ['centre', 'top left', 'top right', 'bottom left', 'bottom right'],
