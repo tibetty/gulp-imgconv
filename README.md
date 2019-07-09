@@ -1,7 +1,7 @@
 gulp-imgconv
 ==========
 
-A gulp plugin to convert images including format conversion, resizing, overlaying, etc. for distribution powered by sharp.
+A gulp plugin to convert images (format conversion, resizing, cutting in/out, watermarking etc.) for distribution or batch image processing
 
 Installation
 ---
@@ -39,23 +39,23 @@ exports.imgconv = () => {
 Arguments
 ---
 #### The argument is a pipeline in *Array* design, and there're 2 basic internal functions:
-- ***resize(widith?: number, height?: number, opts?: {[k: string]: any})***
+- *resize(widith?: number, height?: number, opts?: {[k: string]: any})*
     - Where `width` and `height` are size to resize to; when any parameter is ommitted, the value of the original image will be used. Please refer to `resizeOptsHelper` object of this package to learn how to make up a correct *opts* object.
-- ***toFormat(fmt: string, opts?: {[k: string]: any})***
-    - Where `fmt` is the format to convert to (right now supports 'jpeg', 'png' and 'webp'). There are quite a few option choices for each format, please find more details from [sharp official document] (http://sharp.dimens.io)
+- *toFormat(fmt: string, opts?: {[k: string]: any})*
+    - Where `fmt` is the format to convert to (right now supports 'jpeg', 'png' and 'webp'). There are quite a few option choices for each format, please find more details from [sharp official document](http://sharp.dimens.io)
     
 #### And 3 overlaying related featured functions inspired by my past experiences:
-- ***cutin/cutout/watermark(src: Buffer | string, opts?: {[k: string]: any})***
+- *cutin/cutout/watermark(src: Buffer | string, opts?: {[k: string]: any})*
     - Where `src` is either the svg/png file name (in string) or the data (in Buffer) to overlay upon the original image, and you can learn how to construct the basic `opts` argument with the help of `compositeOptsHelper`, or read sharp official document to comprehensively understand the exact meaning of each option.
     
 #### Moreover, almost all other transformation related functions of [sharp](http://sharp.dimens.io) are supported with the same function prototype, please feel free to use like what I did in the test:
-- ***extend***, ***extract***, ***trim***
-- ***rotate***, ***flip***, ***flop***
-- ***sharpen***, ***median***, ***blur***
-- ***flatten***, ***gamma***, ***negate***, ***linear***, ***normalize***, ***convolve***, ***threshould***, ***recomb***, ***modulate***
-- ***tint***, ***grayscale***, ***toColorspace***
-- ***removeAlpha***, ***ensureAlpha***, ***extractChannel***, ***joinChannel***, ***bandbool***
-- ***composite***, ***boolean***
+- *extend*, *extract*, *trim*
+- *rotate*, *flip*, *flop*
+- *sharpen*, *median*, *blur*
+- *flatten*, *gamma*, *negate*, *linear*, *normalize*, *convolve*, *threshould*, *recomb*, *modulate*
+- *tint*, *grayscale*, *toColorspace*
+- *removeAlpha*, *ensureAlpha*, *extractChannel*, *joinChannel*, *bandbool*
+- *composite*, *boolean*
 
 Thanks
 ---
