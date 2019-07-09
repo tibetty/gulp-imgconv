@@ -34,6 +34,8 @@ exports.imgconv = () => {
     .pipe(gulp.dest('dst/')); 
 };
 ```
+[Original](https://raw.githubusercontent.com/tibetty/gulp-imgconv/master/test/src/beach.jpg)
+[Converted](https://raw.githubusercontent.com/tibetty/gulp-imgconv/master/test/dst/beach.png)
 ### PROCESSING: resize the original images in `src/` to width = 800, sharpen, grayscale them and save in `dst/` in corresponding formats (SVG, GIF -> PNG, otherwise the old format)
 ```javascript
 const gulp = require('gulp'), 
