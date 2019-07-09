@@ -17,10 +17,8 @@ module.exports = (pipeline) => {
     const execPlan = [];
     let compositeIndex = -1;
     for (const stage of pipeline) {
-        execPlan.push(stage);
         // only one composite invocation will take effect, so we need to combine many composite calling to one with combined pipeline 
         if (stage.func === 'composite') {                
-            execPlan.pop();
             if (compositeIndex < 0) {
                 compositeIndex = execPlan.length;
                 stage.args = [stage.args];
@@ -28,6 +26,8 @@ module.exports = (pipeline) => {
             } else {
                 execPlan[compositeIndex].args[0].push(stage.args[0]);
             }
+        } else {
+            execPlan.push(stage);
         }
     }
 
@@ -44,7 +44,6 @@ module.exports = (pipeline) => {
             const image = sharp(buf);
             (async () => {
                 try {
-                    const meta = await image.metadata();
                     const {data: contents, info} = await execPlan.reduce((o, stage) => o[stage.func].apply(o, stage.args), image);
                     contents.ext = info.format;
                     totalFiles++;
@@ -135,8 +134,8 @@ module.exports = (pipeline) => {
 
     const proto = {
         resizeOptsHelper: {
-            width: 'placeholder<raw width, as a number>',
-            height: 'placeholder<raw height, as a number>',
+            width: 'placeholder<width to resize to, as a number>',
+            height: 'placeholder<height to resize to, as a number>',
             fit: ['cover', 'contain', 'fill', 'inside', 'outside'],
             kernel: ['nearest', 'cubic', 'mitchell', 'lanczos2', 'lanczos3'],
             position: ['centre', 'top left', 'top right', 'bottom left', 'bottom right'],
