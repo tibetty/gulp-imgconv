@@ -56,14 +56,14 @@ exports.imgconv = () => {
 
 [Converted](https://raw.githubusercontent.com/tibetty/gulp-imgconv/master/test/dst/beach.png)
 
-- PROCESSING: resize the original images in `src/` to width = 800, sharpen, grayscale them and save in `dst/` in corresponding formats (SVG, GIF -> PNG, otherwise the old format)
+- PROCESSING: resize the original images in `src/` to width = 800, sharpen, grayscale them and save to `dst/` in corresponding formats (SVG, GIF -> PNG, otherwise the original format)
 ```javascript
 const gulp = require('gulp'), 
 gic = require('gulp-imgconv');
 
 exports.imgconv = () => {
 gulp.src('src/*')
-    .pipe(
+    .pipe(gic([
         gic.resize({
             width: 800, 
             fit: 'contain',
@@ -76,19 +76,19 @@ gulp.src('src/*')
 };
 ```
 
-Arguments
+API
 ---
-#### The argument is a pipeline in *Array* design, and there're 2 basic internal functions:
-- *resize(widith?: number, height?: number, opts?: {[k: string]: any})*
-    - Where `width` and `height` are size to resize to; when any parameter is ommitted, the value of the original image will be used. Please refer to `resizeOptsHelper` object of this package to learn how to make up a correct *opts* object.
+#### The only argument is a pipeline in *Array* design, and there're 2 basic functions:
+- *resize(widith?: number, height?: number, opts?: {[k: string]: any})* - **now a direct mapping to Sharp's `resize` function**  
+    - Where `width` and `height` are size to resize to; when any parameter is ommitted, its value will be determined by `fit` option. Please refer to `resizeOptsHelper` object of this package to learn how to make up a correct *opts* object.
 - *toFormat(fmt: string, opts?: {[k: string]: any})*
     - Where `fmt` is the format to convert to (right now supports **jpeg**, **png**, **tiff** and **webp**). There are quite a few option choices for each format, please find more details from [sharp official document](http://sharp.dimens.io)
     
 #### And 3 overlaying related featured functions inspired by my past experiences:
-- *cutin/cutout/watermark(src: Buffer | string, opts?: {[k: string]: any})*
+- *cutin/cutout/watermark(src: Buffer | string, opts?: {[k: string]: any})* - **an encapsulation of Sharp's `composite` function**
     - Where `src` is either the svg/png file name (in string) or the data (in Buffer) to overlay upon the original image, and you can learn how to construct the basic `opts` argument with the help of `compositeOptsHelper`, or read sharp official document to comprehensively understand the exact meaning of each option.
     
-#### Moreover, almost all other transformation related functions of [sharp](http://sharp.dimens.io) are supported with the same function prototype, please feel free to use like what I did in the test:
+#### Moreover, almost all other transformation related functions of [sharp](http://sharp.dimens.io) are supported with the same function prototype, please feel free to use like what I did in the test `gulpfile.js` file:
 - *extend*, *extract*, *trim*
 - *rotate*, *flip*, *flop*
 - *sharpen*, *median*, *blur*
