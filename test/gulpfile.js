@@ -37,7 +37,7 @@ exports.cflg = () => {
             .toFormat('png', {
                 quality: 80
             })
-            .toPipeline()
+            .commit()
         ))
         .pipe(gulp.dest('dst'));
 };
