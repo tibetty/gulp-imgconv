@@ -188,7 +188,7 @@ module.exports = (pipeline) => {
             return this;
         },
 
-        toPipeline: function() {
+        commit: function() {
             return this.__pipeline__;
         }
     };
