@@ -1,6 +1,6 @@
 {
   "name": "gulp-imgconv",
-  "version": "0.8.10",
+  "version": "0.9.1",
   "description": "a gulp plugin to convert images (format conversion, resizing, cutting in/out, watermarking etc.) for distribution or batch image processing",
   "main": "index.js",
   "scripts": {
