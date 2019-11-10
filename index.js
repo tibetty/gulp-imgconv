@@ -133,6 +133,8 @@ module.exports = (pipeline) => {
     }
 
     const proto = {
+        // __pipeline__: [],
+
         resizeOptsHelper: {
             width: 'placeholder<width to resize to, as a number>',
             height: 'placeholder<height to resize to, as a number>',
@@ -159,22 +161,35 @@ module.exports = (pipeline) => {
             density: 'placeholder<DPI for vector image, as a number>'
         },
 
+        begin: function() {
+            this.__pipeline__ = [];
+            return this;
+        },
+
         // basic functions
-        toFormat: (fmt, ...args) => {
-            return {func: fmt, args};
+        toFormat: function(fmt, ...args) {
+            this.__pipeline__.push({func: fmt, args});
+            return this;
         },
 
         // featured functions
-        cutin: (src, opts) => {
-            return {func: 'composite', args: [Object.assign({input: src, blend: 'dest-in'}, opts || {})]};
+        cutin: function (src, opts) {
+            this.__pipeline__.push({func: 'composite', args: [Object.assign({input: src, blend: 'dest-in'}, opts || {})]});
+            return this;
         },
 
-        cutout: (src, opts) => {
-            return {func: 'composite', args: [Object.assign({input: src, blend: 'dest-out'}, opts || {})]};
+        cutout: function(src, opts) {
+            this.__pipeline__.push({func: 'composite', args: [Object.assign({input: src, blend: 'dest-out'}, opts || {})]});
+            return this;
         },
 
-        watermark: (src, opts) => {
-            return {func: 'composite', args: [Object.assign({input: src, blend: 'over'}, opts || {})]};
+        watermark: function(src, opts) {
+            this.__pipeline__.push({func: 'composite', args: [Object.assign({input: src, blend: 'over'}, opts || {})]});
+            return this;
+        },
+
+        toPipeline: function() {
+            return this.__pipeline__;
         }
     };
 
@@ -182,7 +197,10 @@ module.exports = (pipeline) => {
         'extend', 'extract', 'trim', 'tint', 'grayscale', 'toColorspace', 'removeAlpha', 'ensureAlpha', 'extractChannel', 'joinChannel', 'bandbool', 'composite'];
 
     for (const func of directFuncs) {
-        proto[func] = new Function('...args', `return {func: '${func}', args};`);
+        proto[func] = new Function('...args', `
+            this.__pipeline__.push({func: '${func}', args});
+            return this;
+        `);
     }
 
     Object.assign(module.exports, constantize(proto));
