@@ -51,7 +51,7 @@ exports.imgconv = () => {
         .toFormat('png', {
             quality: 80
         })
-        .toPipeline()
+        .commit()
     ))
     .pipe(gulp.dest('dst/')); 
 };
@@ -78,7 +78,7 @@ gulp.src('src/*')
         })
         .sharpen()
         .grayscale()
-        .toPipeline()
+        .commit()
     ))
     .pipe(gulp.dest('dst/')); 
 };
@@ -95,7 +95,9 @@ API
 #### And 3 overlaying related featured functions inspired by my past experiences:
 - *cutin/cutout/watermark(src: Buffer | string, opts?: {[k: string]: any})* - **an encapsulation of Sharp's `composite` function**
     - Where `src` is either the svg/png file name (in string) or the data (in Buffer) to overlay upon the original image, and you can learn how to construct the basic `opts` argument with the help of `compositeOptsHelper`, or read sharp official document to comprehensively understand the exact meaning of each option.
-    
+
+#### To construct this pipeline array, you can use chained method calling started by ```begin()``` and ended by ```commit()```.
+
 #### Moreover, almost all other transformation related functions of [sharp](http://sharp.dimens.io) are supported with the same function prototype, please feel free to use like what I did in the test `gulpfile.js` file:
 - *extend*, *extract*, *trim*
 - *rotate*, *flip*, *flop*
