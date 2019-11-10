@@ -69,10 +69,9 @@ gic = require('gulp-imgconv');
 
 exports.imgconv = () => {
 gulp.src('src/*')
-    .pipe(gic(
-        gic.
-        begin()
-        /resize({
+    .pipe(gic(gic
+        .begin()
+        .resize({
             width: 800, 
             fit: 'contain',
             background: '#00000000'    
